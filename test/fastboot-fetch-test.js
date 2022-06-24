@@ -16,7 +16,7 @@ describe('renders in fastboot build', function() {
     app = new AddonTestApp();
 
     return app
-      .create('dummy', { skipNpm: true })
+      .create('dummy', { emberVersion: '^3.0.0', skipNpm: true })
       .then(app =>
         app.editPackageJSON(pkg => {
           pkg.devDependencies['ember-cli-fastboot'] = '*';
@@ -24,11 +24,15 @@ describe('renders in fastboot build', function() {
           pkg.devDependencies['ember-fetch-adapter'] = '0.4.0';
           // These 2 are in ember-fetch's package.json, symlinking to dummy won't help resolve
           pkg.devDependencies['abortcontroller-polyfill'] = '*';
-          pkg.devDependencies['node-fetch'] = '*';
+          pkg.devDependencies['node-fetch'] = '^2.0.0';
         })
       )
       .then(function() {
         return app.run('npm', 'install');
+      })
+      .then(function() {
+        // The `ember-cli-fastboot` blueprint adds `node: 'current'` as a target.
+        return app.runEmberCommand('g', 'ember-cli-fastboot');
       })
       .then(function() {
         return app.startServer({

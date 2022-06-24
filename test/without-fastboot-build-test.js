@@ -16,7 +16,7 @@ describe('it builds without ember-cli-fastboot', function() {
 
   it('builds no exist dist/ember-fetch/fetch-fastboot.js', function() {
     return app
-      .create('dummy', { skipNpm: true })
+      .create('dummy', { emberVersion: '^3.0.0', skipNpm: true })
       .then((app) =>
         app.editPackageJSON((pkg) => {
           delete pkg.devDependencies['ember-cli-fastboot'];
